@@ -22,11 +22,14 @@ class Fasta(AbsFormat):
         had_header = False
         count = 1
         for line in file:
+            line = line.strip()
             if line == "":
+                file.close()
                 raise Exception("Fasta.validate_file() - Error empty line at line: " + str(count), file_path)
 
             if had_header:
                 if line.startswith(">"):
+                    file.close()
                     raise Exception("Fasta.validate_file() - Header without a sequence in line: " + str(count-1), file_path)
 
                 # test for the
@@ -36,18 +39,25 @@ class Fasta(AbsFormat):
                         c_count += 1
                         continue
                     else:
-                        raise Exception("Fasta.validate_file() - Character not allowed in sequence in line: "
+                        file.close()
+                        raise Exception("Fasta.validate_file() - Character not allowed [" + c + "] in sequence in line: "
                                         + str(count) + ":" + str(c_count), file_path)
 
                 had_header = False
+                count += 1
 
             else:
                 if line.startswith(">"):
                     had_header = True
+                    count += 1
                     continue
 
         if had_header:
+            file.close()
             raise Exception("Fasta.validate_file() - Header at end of file with no sequence.", file_path)
+
+        file.close()
+        return True
 
 
 

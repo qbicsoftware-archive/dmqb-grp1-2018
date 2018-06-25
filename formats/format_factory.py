@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from formats.fasta import Fasta
 
 

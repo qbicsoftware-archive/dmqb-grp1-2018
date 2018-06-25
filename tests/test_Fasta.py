@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import unittest
 from formats.fasta import Fasta

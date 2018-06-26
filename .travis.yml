@@ -1,6 +1,17 @@
+sudo: required
 language: python
 python:
     - "2.7"
     - "3.4"
     - "3.5"
     - "3.6"
+
+install:
+  - cd ${TRAVIS_BUILD_DIR}
+  - pip install .
+  - pip install codecov pytest pytest-cov
+
+script: pytest #--cov=  # cmd to start format validator
+
+#after_success:
+#- codecov

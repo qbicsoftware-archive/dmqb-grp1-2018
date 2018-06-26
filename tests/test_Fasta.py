@@ -12,8 +12,8 @@ def complete_path(wdir, path):
 # Define the working directory
 working_dir = os.path.dirname(__file__)
 
-PATH_VALID_FILES = complete_path(working_dir, "tests/testFiles/valid")
-PATH_CORRUPT_FILES = complete_path(working_dir, "tests/testFiles/corrupt")
+PATH_VALID_FILES = complete_path(working_dir, "testFiles/valid")
+PATH_CORRUPT_FILES = complete_path(working_dir, "testFiles/corrupt")
 
 
 class TestFasta(unittest.TestCase):

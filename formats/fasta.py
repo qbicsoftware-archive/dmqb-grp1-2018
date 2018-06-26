@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from formats.AbstractFormat import AbsFormat
+from formats.abstract_format import AbsFormat
 
 """
 Fasta format validator following the NCBI definition.

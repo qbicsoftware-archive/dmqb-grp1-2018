@@ -17,7 +17,6 @@ PATH_CORRUPT_FILES = complete_path(working_dir, "testFiles/corrupt")
 
 
 class TestFasta(unittest.TestCase):
-    """ TODO: Unit Test for the fasta format."""
     def test_valid(self):
         f = Fasta("DNA")
         self.assertTrue(f.validate_file(PATH_VALID_FILES + "/fastaDNA/valid.fasta"))

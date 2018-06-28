@@ -1,22 +1,24 @@
+#!/usr/bin/env python
 
-from formats.AbstractFormat import AbsFormat
-
-"""
-Fasta format validator following the NCBI definition.
-https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=BlastHelp (17.6.18)
-
-"""
+from formats.abstract_format import AbsFormat
 
 
 class Fasta(AbsFormat):
+    """Fasta format validator following the NCBI definition.
 
+    The format definition can be found here:
+    https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=BlastHelp (17.6.18)
+
+    """
     def __init__(self, code):
+        """TODO DOC String"""
         if code == "DNA":
             self.allowed = self.get_dna()
         if code == "AA":
             self.allowed = self.get_aa()
 
     def validate_file(self, file_path):
+        """TODO DOC String"""
         file = open(file_path, "r")
 
         had_header = False
@@ -25,26 +27,21 @@ class Fasta(AbsFormat):
             line = line.strip()
             if line == "":
                 file.close()
-                raise Exception("Fasta.validate_file() - Error empty line at line: " + str(count), file_path)
+                return False, file_path, "Fasta: Error empty line at line: " + str(count)
 
             if had_header:
                 if line.startswith(">"):
                     file.close()
-                    raise Exception("Fasta.validate_file() - Header without a sequence in line: " + str(count-1), file_path)
+                    return False, file_path, "Fasta: Header without a sequence in line: " + str(count-1)
 
-                # test for the
-                c_count = 1
-                for c in line:
-                    if c in self.allowed:
-                        c_count += 1
-                        continue
-                    else:
-                        file.close()
-                        raise Exception("Fasta.validate_file() - Character not allowed [" + c + "] in sequence in line: "
-                                        + str(count) + ":" + str(c_count), file_path)
+                result, message, char_pos = self.validate_line_coding(line)
 
-                had_header = False
-                count += 1
+                if result:
+                    had_header = False
+                    count += 1
+                else:
+                    file.close()
+                    return False, file_path, message+" at line: " + str(count) + ":" + str(char_pos)
 
             else:
                 if line.startswith(">"):
@@ -54,12 +51,22 @@ class Fasta(AbsFormat):
 
         if had_header:
             file.close()
-            raise Exception("Fasta.validate_file() - Header at end of file with no sequence.", file_path)
+            return False, file_path, "Fasta: Header at end of file with no sequence."
 
         file.close()
-        return True
+        return True, file_path, ""
 
+    def validate_line_coding(self, line):
+        """TODO DOC String"""
+        c_count = 1
+        for c in line:
+            if c in self.allowed:
+                c_count += 1
+                continue
+            else:
+                return False, "Fasta: Character not allowed [" + c + "] in sequence", c_count
 
+        return True, "", -1
 
     """
         A  adenosine          C  cytidine             G  guanine
@@ -70,6 +77,7 @@ class Fasta(AbsFormat):
         V  G/C/A              -  gap of indeterminate length
     """
     def get_dna(self):
+        """TODO DOC String"""
         return ['A', 'C', 'G', 'T', 'N', 'U', 'K', 'S', 'Y', 'M', 'W', 'R', 'B', 'D', 'H', 'V', '-']
 
     """
@@ -89,5 +97,6 @@ class Fasta(AbsFormat):
     """
 
     def get_aa(self):
+        """TODO DOC String"""
         return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
                 'W', 'Y', 'Z', 'X', '*', '-']

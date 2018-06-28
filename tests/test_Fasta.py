@@ -2,7 +2,7 @@
 
 import os
 import unittest
-from formats.fasta import Fasta
+from formats.fasta.fasta import Fasta
 
 
 def complete_path(wdir, path):

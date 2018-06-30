@@ -8,14 +8,20 @@ Usually corrupted data creates big problems during analaysis. Reaching the desir
 
 In order to address this issue we created the __valifor__ that can validate the NGS file formats; fasta and fastq. Additionaly it could be exapanded easily to the more file formats. 
 
-.. contents:: **Table of Contents**
+### Table of Contents
+* installation
+* The command line interface
+* Main logic
+* Factory
+* AbsFormat
+    * fasta
+    * fastq
 
 Installation
 ============
 
 The easiest way is to install a stable release of ``valifor`` from PyPi with pip:
 
-.. code-block:: bash
 
     $ pip install valifor
 
@@ -28,7 +34,6 @@ The command-line interface:
 
 Once the *valifor* is installed, it can be called by typing ``--help`` in the command line. It will preview an overview of the subcommands available in *valifor*:
 
-.. code-block:: bash
     $ valifor --help
     Usage: parser.py [OPTIONS] [FILES]...
 
@@ -38,9 +43,6 @@ Once the *valifor* is installed, it can be called by typing ``--help`` in the co
 
 
 in order to validate a file, the user should call the valifor and then type the format that he/she wants to test against and then type the name of file/s. 
-
-
-.. code-block:: bash
 
     $ valifor fasta example.fasta
 
@@ -55,7 +57,6 @@ if the file does not exist:
 ===========================
 The *valifor* is designed based on the following structure: 
 
-.. code-block:: bash
     .
     ├── file/s
     │   └── input_file/s   // input files

@@ -2,34 +2,98 @@
 
 import click
 import os.path
-import sys
+import formats.format_factory as ff
 
-class parser():
-
-	@click.command()
-	@click.option('--type', nargs=1, help="Type of file",
-				  type=click.Choice(["fasta", "fastA", "fastq"]))
-	@click.argument('files', nargs=-1, type=click.Path())
+available_formats = ff.available_formats()
 
 
-	def readFiles(type, files):
-		output = None
-		types = []
-		paths = []
+@click.command()
+@click.option('--format', nargs=1, help="Type of file",
+                type=click.Choice(available_formats))
+@click.argument('paths', nargs=-1, type=click.Path())
+def valifor_cli(format, paths):
+    """TODO docstring"""
 
-		for filename in files:
-			if not os.path.exists(filename):
-				print "This file does not exist: %s" % filename
-			else:
-				paths.append(filename)
-				for i in range(len(filename)):			
-					if filename[i] == '.':
-						types.append(filename[i + 1:])
-			output = paths, types
-		return click.echo(output)
+    files = gather_files(paths)
+
+    # if there are no valid files stop
+    if not files:
+        click.echo("No valid files.")
+        return
+
+    if format is None:
+        click.echo("No format given. Will use file-ending if possible.")
+        test_files_with_ending(files)
+    else:
+        test_files(files, format)
+    return
+
+
+def gather_files(paths):
+    """TODO"""
+    files = []
+
+    for path in paths:
+        path = os.path.abspath(path)
+
+        if os.path.isfile(path):
+            files.append(path)
+        elif os.path.isdir(path):
+            dir_files = os.listdir(path)
+
+            for df in dir_files:
+                if os.path.isfile(os.path.join(path, df)):
+                    files.append(os.path.join(path, df))
+        else:
+            click.echo("Given path does not exist: " + path)
+
+    return files
+
+
+def test_files(files, format):
+    """TODO"""
+
+    validator = ff.get_validator(format)
+
+    for file in files:
+        valid, msg = validator.validate_file(file)
+        print_result(valid, msg, file)
+
+
+def test_files_with_ending(files):
+    """TODO"""
+
+    for file in files:
+        filename = str.split(file, os.sep)[-1]
+
+        if "." in filename:
+            ending = str.split(filename, ".")[-1]
+            format = ff.get_format_from_ending(ending)
+
+            if format is "":
+                click.echo("Skipping: " + file)
+                click.echo("Unknown file-ending: " + ending)
+            else:
+                validator = ff.get_validator(format)
+                valid, msg = validator.validate_file(file)
+
+                print_result(valid, msg, file)
+
+        else:
+            click.echo("Skipping: " + file)
+            click.echo("No file-ending. Please use --format to define the format to test.")
+
+
+def print_result(valid, msg, path):
+    """TODO"""
+    if valid:
+        click.echo("valid: " + path)
+    else:
+        click.echo("failed: " + path)
+        click.echo(msg)
+
 
 if __name__ == '__main__':
-	parser = parser()
-	parser.readFiles()
+    valifor_cli()
 
 

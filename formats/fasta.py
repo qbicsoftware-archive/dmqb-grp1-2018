@@ -27,12 +27,12 @@ class Fasta(AbsFormat):
             line = line.strip()
             if line == "":
                 file.close()
-                return False, file_path, "Fasta: Error empty line at line: " + str(count)
+                return False, "Fasta: Error empty line at line: " + str(count)
 
             if had_header:
                 if line.startswith(">"):
                     file.close()
-                    return False, file_path, "Fasta: Header without a sequence in line: " + str(count-1)
+                    return False, "Fasta: Header without a sequence in line: " + str(count-1)
 
                 result, message, char_pos = self.validate_line_coding(line)
 
@@ -41,7 +41,7 @@ class Fasta(AbsFormat):
                     count += 1
                 else:
                     file.close()
-                    return False, file_path, message+" at line: " + str(count) + ":" + str(char_pos)
+                    return False, message+" at line: " + str(count) + ":" + str(char_pos)
 
             else:
                 if line.startswith(">"):
@@ -51,10 +51,10 @@ class Fasta(AbsFormat):
 
         if had_header:
             file.close()
-            return False, file_path, "Fasta: Header at end of file with no sequence."
+            return False, "Fasta: Header at end of file with no sequence."
 
         file.close()
-        return True, file_path, ""
+        return True, ""
 
     def validate_line_coding(self, line):
         """TODO DOC String"""

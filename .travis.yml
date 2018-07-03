@@ -11,7 +11,7 @@ install:
   - pip install .
   - pip install codecov pytest pytest-cov
 
-script: pytest --cov= valifor . # cmd to start format validator
+script: python -m pytest --cov= valifor . # cmd to start format validator
 
 after_success:
 - codecov

@@ -7,13 +7,16 @@ import formats.format_factory as ff
 available_formats = ff.available_formats()
 
 
-@click.command()
-@click.option('--format', nargs=1, help="Type of file",
+@click.command(context_settings={'help_option_names': ['-h', '--help']})
+@click.option('--format', '-f', nargs=1, help="Type of format to be tested for all files",
                 type=click.Choice(available_formats))
 @click.argument('paths', nargs=-1, type=click.Path())
 def valifor_cli(format, paths):
     """TODO docstring"""
 
+    if (not paths) and (format is None):
+        # TODO click.echo("Help to use valifor")
+        return
     files = gather_files(paths)
 
     # if there are no valid files stop

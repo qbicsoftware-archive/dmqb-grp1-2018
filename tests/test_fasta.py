@@ -59,12 +59,12 @@ class TestFasta(unittest.TestCase):
         f = Fasta("DNA")
         valid, msg = f.validate_file(get_path(valid, True, filename))
         self.assertFalse(valid)
-        self.assertEqual(msg, "Fasta: Character not allowed [O] in sequence at line: 2:10")
+        self.assertEqual(msg, "Fasta: Character not allowed [O] in sequence at line: 3:10")
 
         f = Fasta("AA")
         valid, msg = f.validate_file(get_path(valid, False, filename))
         self.assertFalse(valid)
-        self.assertEqual(msg, "Fasta: Character not allowed [J] in sequence at line: 2:9")
+        self.assertEqual(msg, "Fasta: Character not allowed [J] in sequence at line: 3:10")
 
     def test_empty_line(self):
         """TODO DOC String"""

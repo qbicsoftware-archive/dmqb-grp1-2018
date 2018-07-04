@@ -6,7 +6,20 @@ from formats.fasta import Fasta
 
 
 def complete_path(wdir, path):
+    """returns the joined path"""
     return os.path.join(wdir, path)
+
+
+def get_all_file_paths(dir):
+    """returns a list of all the files in the given directory."""
+    files = []
+    dir_files = os.listdir(dir)
+
+    for df in dir_files:
+        if os.path.isfile(os.path.join(dir, df)):
+            files.append(os.path.join(dir, df))
+
+    return files
 
 # Define the working directory
 working_dir = os.path.dirname(__file__)
@@ -19,6 +32,7 @@ PATH_CORRUPT_FILES_DNA = complete_path(working_dir, "test_files/corrupt/fasta_dn
 
 
 def get_path(valid, dna, filename):
+    """small helper to get the path to the correct file."""
     if valid:
         if dna:
             return complete_path(PATH_VALID_FILES_DNA, filename)
@@ -32,26 +46,29 @@ def get_path(valid, dna, filename):
 
 
 class TestFasta(unittest.TestCase):
-    """TODO DOC String"""
+    """Unittest class for automatic testing of the Fasta class in formats.fasta."""
 
     def test_valid(self):
-        """TODO DOC String"""
+        """Tests the Fasta validator with valid files"""
 
         filename = "valid.fasta"
         valid = True
         
         f = Fasta("DNA")
-        valid, msg = f.validate_file(get_path(valid, True, filename))
-        self.assertTrue(valid)
-        self.assertEqual(msg, "")
+
+        for file in get_all_file_paths(PATH_VALID_FILES_DNA):
+            valid, msg = f.validate_file(file)
+            self.assertTrue(valid)
+            self.assertEqual(msg, "")
 
         f = Fasta("AA")
-        valid, msg = f.validate_file(get_path(valid, False, filename))
-        self.assertTrue(valid)
-        self.assertEqual(msg, "")
+        for file in get_all_file_paths(PATH_VALID_FILES_AA):
+            valid, msg = f.validate_file(file)
+            self.assertTrue(valid)
+            self.assertEqual(msg, "")
 
     def test_wrong_coding(self):
-        """TODO DOC String"""
+        """Tests the Fasta validator with a corrupt file that has coding errors in the sequences"""
 
         filename = "wrongCoding.fasta"
         valid = False
@@ -67,7 +84,7 @@ class TestFasta(unittest.TestCase):
         self.assertEqual(msg, "Fasta: Character not allowed [J] in sequence at line: 3:10")
 
     def test_empty_line(self):
-        """TODO DOC String"""
+        """Tests the Fasta validator with a corrupt file that contains an empty line"""
 
         filename = "emptyLine.fasta"
         valid = False
@@ -83,7 +100,7 @@ class TestFasta(unittest.TestCase):
         self.assertEqual(msg, "Fasta: Error empty line at line: 3")
 
     def test_double_header(self):
-        """TODO DOC String"""
+        """Tests the Fasta validator with a corrupt file that is missing the sequence to a header"""
 
         filename = "doubleHeader.fasta"
         valid = False
@@ -97,6 +114,20 @@ class TestFasta(unittest.TestCase):
         valid, msg = f.validate_file(get_path(valid, False, filename))
         self.assertFalse(valid)
         self.assertEqual(msg, "Fasta: Header without a sequence in line: 3")
+
+    def test_all_corrupt(self):
+        """Tests the Fasta validator with all corrupt files"""
+        f = Fasta("DNA")
+
+        for file in get_all_file_paths(PATH_CORRUPT_FILES_DNA):
+            valid, msg = f.validate_file(file)
+            self.assertFalse(valid)
+
+        f = Fasta("AA")
+
+        for file in get_all_file_paths(PATH_CORRUPT_FILES_AA):
+            valid, msg = f.validate_file(file)
+            self.assertFalse(valid)
 
 
 if __name__ == '__main__':

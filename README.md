@@ -1,14 +1,5 @@
-# dmqb-grp1-2018
-The project assignment work of group 1 in the lecture DMQB
-
-
-
-=======
-# valifor 
-=======
-valifor 
+valifor
 =============================
->>>>>>> 3rd commit
 
 A command line validating tool to parse and validate NGS file formats(fasta and fastq) in their applications.
 

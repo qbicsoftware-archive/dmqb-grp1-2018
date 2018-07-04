@@ -18,6 +18,11 @@ class Fastq(AbsFormat):
 
         for line in file:
             line = line.strip()
+
+            if line == "":
+                file.close()
+                return False, "Fastq: Empty line at line: " + str(count+1)
+
             line_kind = count % 4
             valid_line, msg = self.test_line(line, line_kind)
 

@@ -85,6 +85,10 @@ def test_files_with_ending(files):
             ending = str.split(filename, ".")[-1]
             format = ff.get_format_from_ending(ending)
 
+            if ending in ff.get_uncertain_endings():
+                click.echo("." + ending + ": format is not completely clear using: " + format)
+                click.echo("To test for a certain format please use the --format option.")
+
             if format is "":
                 click.echo("Skipping: " + filename)
                 click.echo("Unknown file-ending: " + ending)

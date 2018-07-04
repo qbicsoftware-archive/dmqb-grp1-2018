@@ -2,6 +2,7 @@
 from formats.fasta import Fasta
 from formats.fastq import Fastq
 
+
 def available_formats():
     """Returns a list of all supported file-types"""
     return ["fasta-dna", "fasta-aa", "fastq"]
@@ -28,3 +29,8 @@ def get_validator(name):
         return Fastq()
 
     raise Exception("FormatFactory.get_format() - Error: Unknown Format identifier.")
+
+
+def get_uncertain_endings():
+    """returns a list of all file endings that don't fully define their format."""
+    return ["fasta"]

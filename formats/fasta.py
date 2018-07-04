@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 from formats.abstract_format import AbsFormat
 
@@ -6,19 +5,27 @@ from formats.abstract_format import AbsFormat
 class Fasta(AbsFormat):
     """Fasta format validator following the NCBI definition.
 
+    Validates whether the file at the given path is of the fasta format or not.
+    Depending on the given code at the initialization it tests for DNA or aminoacid coding.
+
     The format definition can be found here:
     https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=BlastHelp (17.6.18)
-
     """
+
     def __init__(self, code):
-        """TODO DOC String"""
+        """Constructor for the fasta-Validator the given code decides whether it tests for DNA or aminoacid coding."""
+
         if code == "DNA":
             self.allowed = self.get_dna()
         if code == "AA":
             self.allowed = self.get_aa()
 
     def validate_file(self, file_path):
-        """TODO DOC String"""
+        """Validates whether the file at the given path is of the fastq format or not.
+
+            :returns boolean whether the format is valid, string message why it is not or an empty string if valid.
+        """
+
         file = open(file_path, "r")
 
         had_header = False
@@ -48,6 +55,14 @@ class Fasta(AbsFormat):
                     had_header = True
                     count += 1
                     continue
+                else:
+                    result, message, char_pos = self.validate_line_coding(line)
+
+                    if result:
+                        count += 1
+                    else:
+                        file.close()
+                        return False, message + " at line: " + str(count) + ":" + str(char_pos)
 
         if had_header:
             file.close()
@@ -56,8 +71,13 @@ class Fasta(AbsFormat):
         file.close()
         return True, ""
 
+    def test_line(self):
+        header = False
+
+        return header,
+
     def validate_line_coding(self, line):
-        """TODO DOC String"""
+        """checks the given line for characters not allowed by the format either DNA or aminoacid coding"""
         c_count = 1
         for c in line:
             if c in self.allowed:
@@ -76,8 +96,10 @@ class Fasta(AbsFormat):
         B  G/T/C              D  G/A/T                H  A/C/T      
         V  G/C/A              -  gap of indeterminate length
     """
-    def get_dna(self):
-        """TODO DOC String"""
+
+    @staticmethod
+    def get_dna():
+        """returns a list of all allowed characters coding for an base"""
         return ['A', 'C', 'G', 'T', 'N', 'U', 'K', 'S', 'Y', 'M', 'W', 'R', 'B', 'D', 'H', 'V', '-']
 
     """
@@ -96,7 +118,8 @@ class Fasta(AbsFormat):
         N  asparagine            -  gap of indeterminate length
     """
 
-    def get_aa(self):
-        """TODO DOC String"""
+    @staticmethod
+    def get_aa():
+        """returns a list of all allowed characters coding for an aminoacid"""
         return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
                 'W', 'Y', 'Z', 'X', '*', '-']

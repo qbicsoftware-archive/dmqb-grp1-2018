@@ -3,12 +3,12 @@ from formats.fasta import Fasta
 from formats.fastq import Fastq
 
 def available_formats():
-    """TODO DOC String"""
+    """Returns a list of all supported file-types"""
     return ["fasta-dna", "fasta-aa", "fastq"]
 
 
 def get_format_from_ending(file_ending):
-    """TODO"""
+    """Returns the corresponding format-name to the given file-ending and an empty string if the ending is unknown."""
     if file_ending == "fasta":
         return "fasta-dna"
     if file_ending == "fastq":
@@ -19,7 +19,7 @@ def get_format_from_ending(file_ending):
 
 
 def get_validator(name):
-    """TODO DOC String"""
+    """Returns the corresponding validator to the given format-name"""
     if name == "fasta-dna":
         return Fasta("DNA")
     if name == "fasta-aa":

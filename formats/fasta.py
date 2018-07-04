@@ -71,11 +71,6 @@ class Fasta(AbsFormat):
         file.close()
         return True, ""
 
-    def test_line(self):
-        header = False
-
-        return header,
-
     def validate_line_coding(self, line):
         """checks the given line for characters not allowed by the format either DNA or aminoacid coding"""
         c_count = 1

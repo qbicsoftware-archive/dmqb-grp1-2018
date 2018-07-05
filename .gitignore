@@ -1,0 +1,14 @@
+# ignore all
+*.pyc
+
+#ignore files:
+format_validator.egg-info
+.coverage
+
+#ignore directories:
+.idea/
+venv/
+dist/
+*/__pychache__
+format_validator.egg-info/
+.pytest_cache/

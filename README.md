@@ -1,77 +1,137 @@
-valifor
+
+Valifor
 =============================
 
-A command line validating tool to parse and validate NGS file formats(fasta and fastq) in their applications.
+__Valifor__ is a small easily extensible command line tool to validate different NGS file formats.
+Currently the following file formats are supported:
+* Fasta
+* Fastq
 
 Motivation
 ======================
 
-Usually corrupted data creates big problems during analaysis. Reaching the desired result from analaysis is dependent on the quality of data set in the first step. Yet there are not enough tools available to validate the data sets. Although there are some format validators available for some file formats but yet they can not address the issue completely as neither each data format has a validator nor each existing format validator can validate more then one file format. As a good example of already existing validating tools one can name the FastaValidator software; that is designed exactly for fasta files and fastQValidator that can only validate the fastq files.  
+In any data driven workflow the quality of the data is of high importance. Especially with formats that get can be manually modified there is a chance for corrupted files that don't fit the format anymore. 
+If corrupted files are able to enter the workflow undetected the whole system can break and may have to be reset, even if it doesn't break the result gotten at the end will not be usable and all the work done will have to be repeated.
+In the second case you may get an even worse situation if the mistake is not found quickly. All further work and conclusions building on the corrupted result might also be unusable. 
 
-In order to address this issue we created the __valifor__ that can validate the NGS file formats; fasta and fastq. Its a command line based tool that can easily varify the quality of data set. Additionaly this tool is designed in a fashion that can be exapanded for more file formats easily. 
+To combat this situation there are validators for different formats that are able to make sure they conform to all the defined rules. For example there is [FastaValidator](https://github.com/jwaldman/FastaValidator) and the [FastqValidator](https://github.com/statgen/fastQValidator) which both can validate their respective formats. There are also programs that not only validate certain formats but also allow to run analysis on them like [bamUtil](https://github.com/statgen/bamUtil)
+
+Yet there are no tools that concentrate on validating a broad range of formats that would allow to have a single program that validates all of the different files going into a workflow. Instead currently it is needed to have multiple tools which all need to be maintained.   
+
+In order to address this issue we started creating *valifor* a command line application that will be able to validate different NGS file formats while it's currently a small start, it's easily extensible and a needed format can quickly be added.
 
 Table of Contents
 =======================
 
-* The overal design
-* Installation
-* The command line interface
-* Main logic
-* Factory
-* AbsFormat
-    * fasta
-    * fastq
+* [The overall architecture](#toa)
+* [Installation](#install)
+* [The command line interface](#cli)
+* [Adding a new Format](#addFormat)
 
-The overal design
+<a name="toa">The overall architecture </a>
 =======================
-The *valifor* design is shown in the following graph: 
+The *valifor* architecture is shown in the following graph: 
 
 ![valifor](https://user-images.githubusercontent.com/35918514/42245707-01840510-7f1a-11e8-8860-20ea51f056b9.jpg)
 
-by adding a new format in the list of AbsFormat one can easily add more format to the validator. 
 
-Installation
+The basic structure is the factory pattern.
+
+Following the flow of information the command line interface receives the input of one ore multiple paths to files/directories to validate and optionally the format which it should check.
+This is used to start the validation process in the main logic. There the factory is used to get the correct validator for the needed format from the child-classes of AbsValidator.
+The AbsValidator is the base class for all implemented validators. Each of the child-classes has to implement the interface given in the parent. 
+The validator given by the factory is then used to validate the files and it returns information about if the files are valid and if not where the format is broken. 
+
+
+<a name="install">Installation </a>
 =======================
+You can install *valifor* using the source files found on [Github](https://github.com/qbicsoftware/dmqb-grp1-2018)
 
-The easiest way is to install a stable release of ``valifor`` from PyPi with pip:
+After you downloaded the directory you can call:
+    
+    $ pip install path_to_the_directory
+
+to install it on your system.
 
 
-    $ pip install valifor
-
-The command-line interface:
+<a name="cli">Using Valifor: </a>
 ========================
 
-Once the *valifor* is installed, it can be called by typing ``--help`` in the command line. It will preview an overview of the subcommands available in *valifor*:
+Once *valifor* is installed, it can be used. 
+You can get an overview on how to use it by adding the  ``--help`` option in the command line. It will show an overview and explanation for *valifor*:
 
     $ valifor --help
-    Usage: parser.py [OPTIONS] [FILES]...
+    Usage: valifor [OPTIONS] [PATHS]...
 
-    Options:
-    --type [fasta|fastA|fastq]  Type of file
-    --help                      Show this message and exit.
+    Welcome to the format validator Valifor:
+
+    Valifor is a easily extensible validator for different formats. To get
+    started you can call "valifor --help" to get this message again and more
+    information to the options.
+
+    To use valifor you can call:
+
+           "valifor [path_to_file]" to check its format based on its
+           file-ending.
+
+           "valifor [path_to_file] --format [format]" to check its format
+           based on the given format.
+
+	Options:
+	  -f, --format [fasta-dna|fasta-aa|fastq]
+	                                  Type of format to be tested for all given files
+	  -h, --help                      Show this message and exit.
+
+you can also test whole directories by giving the path to the directory:
+
+    $ valifor [path_to_dir]
+
+or test multiple files and/or directories:
+
+    $ valifor [path_to_dir] [path_to_file]
 
 
-in order to validate a file, the user should call the valifor and then type the format that he/she wants to test against and then type the name of file/s. The *--tpye* is optional, the user can either select it or not, but a user can only select from the provided list of data formats listed under type.
+#### An example use case: 
 
-    $ valifor fasta example.fasta
+To use *valifor* to validate a fasta file call:
 
-    (['example.fasta'], ['fasta'])
-
-if the file does not exist: 
-
-    This file does not exist: example.fasta
+    $ valifor  example.fasta --format fasta-dna
     
-Main Logic: 
+Then it prints the result in the command line. In case of a valid file it prints the format tested and the name:
+
+    $ valid: example.fasta - fasta-dna
+
+or in case of a corrupted file it additionally returns the reason if it is possible:
+
+    $ failed: example.fasta - fasta-dna: Character [O] not allowed in sequence. At line: 3:10
+
+if the file or directory doesn't exist it prints a warning with the full path: 
+
+    Given path does not exist: /path/to/fileOrDir
+
+    
+<a name="addFormat">Adding a new Format: </a>
 =======================
-This part is the main part of the tool. After recieving the input the main logic will check the content of the file/s using the factory and will evaluate the file based on its format using the AbsFormat. 
-
-Factory
-=======================
-In this part the information that is required for file categorization is stored and once the user inputs the file/s into the valifor the factory will be called by Main logic part to categorize the file to one of the data formats available in valifor. The factory contains specifications that directs the file in a specific direction order to chose its correct data format. 
-
-AbsFormat
-=======================
-In this part the data formats are specified. Currently the valifor can validate two NGS data formats that are fasta and fastq. But its designed in a way that can let us add more data formats to the AbsFromats part. The specifications for each data format is detailed under the AbsFormat. This part will be called by Main Logic while checking the quality of the file.   
-
-
  
+To add a new format you have to write a corresponding validator of course. 
+The new plug-in must consist of a class that inherits from the AbsValidator and overwrites all its functions following the description in the documentation of AbsValidator.
+(Additionally there should be a unittest-class with test-files.)
+
+With the new validator-class most of the work is finished the only thing left is to integrate it in the project.
+For this you only need add it in the functions of the validator-factory which is also in the validator module.
+
+You will find 4 functions:
+
+* available_formats(): 
+	* add the new name which the option in the CLI should have. 
+* get_format_from_ending(file_ending):
+	* add the conversion from the file-ending to the name of the option.
+* get_validator(name):
+	* add the new class as a return for the new option.
+* def get_uncertain_endings():
+	* if the file-ending is not enough to be completely certain about the exact format also add it here. 
+
+And with that you are finished and have integrated a new format for this project.
+
+
+

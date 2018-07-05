@@ -4,11 +4,13 @@
 #ignore files:
 format_validator.egg-info
 .coverage
+coverage.xml
 
 #ignore directories:
 .idea/
 venv/
 dist/
 */__pychache__
-format_validator.egg-info/
+*.egg-info/
+Valifor.egg-info/
 .pytest_cache/

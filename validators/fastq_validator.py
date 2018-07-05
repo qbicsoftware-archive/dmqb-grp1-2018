@@ -1,8 +1,8 @@
 
-from validators.abstract_validator import AbsFormat
+from validators.abstract_validator import AbsValidator
 
 
-class Fastq(AbsFormat):
+class Fastq(AbsValidator):
     """The class to validate the Fastq format."""
 
     def validate_file(self, file_path):

@@ -1,8 +1,8 @@
 
-from validators.abstract_validator import AbsFormat
+from validators.abstract_validator import AbsValidator
 
 
-class Fasta(AbsFormat):
+class Fasta(AbsValidator):
     """Fasta format validator following the NCBI definition.
 
     Validates whether the file at the given path is of the fasta format or not.
@@ -34,7 +34,7 @@ class Fasta(AbsFormat):
             line = line.strip()
             if line == "":
                 file.close()
-                return False, "Error empty line at line: " + str(count)
+                return False, "Empty line at line: " + str(count)
 
             if had_header:
                 if line.startswith(">"):

@@ -45,11 +45,11 @@ class TestFastq(unittest.TestCase):
 
         valid, msg = fastq.validate_file(complete_path(PATH_CORRUPT_FILES, "wrong_dna_coding.fastq"))
         self.assertFalse(valid)
-        self.assertEqual(msg, "Fastq: Expected DNA sequence contains banned characters. Line: 2")
+        self.assertEqual(msg, "Expected DNA sequence contains banned characters. Line: 2")
 
         valid, msg = fastq.validate_file(complete_path(PATH_CORRUPT_FILES, "wrong_quality_coding.fastq"))
         self.assertFalse(valid)
-        self.assertEqual(msg, "Fastq: Expected quality sequence contains banned characters. Line: 4")
+        self.assertEqual(msg, "Expected quality sequence contains banned characters. Line: 4")
 
     def test_missing_line(self):
         """Tests the Fastq validator a files that has a missing line"""
@@ -57,7 +57,7 @@ class TestFastq(unittest.TestCase):
 
         valid, msg = fastq.validate_file(complete_path(PATH_CORRUPT_FILES, "missing_line.fastq"))
         self.assertFalse(valid)
-        self.assertEqual(msg, "Fastq: Expected quality sequence contains banned characters. Line: 4")  # space
+        self.assertEqual(msg, "Expected quality sequence contains banned characters. Line: 4")  # space
 
     def test_all_corrupt(self):
         """Tests the Fastq validator with all corrupt files"""

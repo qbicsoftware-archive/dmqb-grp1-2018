@@ -76,12 +76,12 @@ class TestFasta(unittest.TestCase):
         f = Fasta("DNA")
         valid, msg = f.validate_file(get_path(valid, True, filename))
         self.assertFalse(valid)
-        self.assertEqual(msg, "Fasta: Character not allowed [O] in sequence at line: 3:10")
+        self.assertEqual(msg, "Character not allowed [O] in sequence. at line: 3:10")
 
         f = Fasta("AA")
         valid, msg = f.validate_file(get_path(valid, False, filename))
         self.assertFalse(valid)
-        self.assertEqual(msg, "Fasta: Character not allowed [J] in sequence at line: 3:10")
+        self.assertEqual(msg, "Character not allowed [J] in sequence. at line: 3:10")
 
     def test_empty_line(self):
         """Tests the Fasta validator with a corrupt file that contains an empty line"""
@@ -92,12 +92,12 @@ class TestFasta(unittest.TestCase):
         f = Fasta("DNA")
         valid, msg = f.validate_file(get_path(valid, True, filename))
         self.assertFalse(valid)
-        self.assertEqual(msg, "Fasta: Error empty line at line: 3")
+        self.assertEqual(msg, "Empty line at line: 3")
 
         f = Fasta("AA")
         valid, msg = f.validate_file(get_path(valid, False, filename))
         self.assertFalse(valid)
-        self.assertEqual(msg, "Fasta: Error empty line at line: 3")
+        self.assertEqual(msg, "Empty line at line: 3")
 
     def test_double_header(self):
         """Tests the Fasta validator with a corrupt file that is missing the sequence to a header"""
@@ -108,12 +108,12 @@ class TestFasta(unittest.TestCase):
         f = Fasta("DNA")
         valid, msg = f.validate_file(get_path(valid, True, filename))
         self.assertFalse(valid)
-        self.assertEqual(msg, "Fasta: Header without a sequence in line: 3")
+        self.assertEqual(msg, "Header without a sequence in line: 3")
 
         f = Fasta("AA")
         valid, msg = f.validate_file(get_path(valid, False, filename))
         self.assertFalse(valid)
-        self.assertEqual(msg, "Fasta: Header without a sequence in line: 3")
+        self.assertEqual(msg, "Header without a sequence in line: 3")
 
     def test_all_corrupt(self):
         """Tests the Fasta validator with all corrupt files"""

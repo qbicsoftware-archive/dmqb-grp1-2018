@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-class AbsFormat:
+class AbsValidator:
     """TODO DOC String"""
 
     def validate_file(self, file_path):

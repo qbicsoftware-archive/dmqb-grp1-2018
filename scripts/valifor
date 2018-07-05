@@ -8,7 +8,7 @@ available_formats = ff.available_formats()
 
 
 @click.command(context_settings={'help_option_names': ['-h', '--help']})
-@click.option('--format', '-f', nargs=1, help="Type of format to be tested for all files",
+@click.option('--format', '-f', nargs=1, help="Type of format to be tested for all given files",
                 type=click.Choice(available_formats))
 @click.argument('paths', nargs=-1, type=click.Path())
 def valifor_cli(format, paths):
@@ -108,10 +108,9 @@ def print_result(valid, format, msg, path):
     path = path.split(os.sep)[-1]
 
     if valid:
-        click.echo("valid " + format + ": " + path)
+        click.echo("valid: " + path + " - " + format)
     else:
-        click.echo("failed " + format + ": " + path)
-        click.echo(msg)
+        click.echo("failed: " + path + " - " + format + ": " + msg)
 
 
 if __name__ == '__main__':

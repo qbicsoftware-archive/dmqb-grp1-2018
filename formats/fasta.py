@@ -34,12 +34,12 @@ class Fasta(AbsFormat):
             line = line.strip()
             if line == "":
                 file.close()
-                return False, "Fasta: Error empty line at line: " + str(count)
+                return False, "Error empty line at line: " + str(count)
 
             if had_header:
                 if line.startswith(">"):
                     file.close()
-                    return False, "Fasta: Header without a sequence in line: " + str(count-1)
+                    return False, "Header without a sequence in line: " + str(count-1)
 
                 result, message, char_pos = self.validate_line_coding(line)
 
@@ -48,7 +48,7 @@ class Fasta(AbsFormat):
                     count += 1
                 else:
                     file.close()
-                    return False, message+" at line: " + str(count) + ":" + str(char_pos)
+                    return False, message+" At line: " + str(count) + ":" + str(char_pos)
 
             else:
                 if line.startswith(">"):
@@ -66,7 +66,7 @@ class Fasta(AbsFormat):
 
         if had_header:
             file.close()
-            return False, "Fasta: Header at end of file with no sequence."
+            return False, "Header at end of file with no sequence."
 
         file.close()
         return True, ""
@@ -79,7 +79,7 @@ class Fasta(AbsFormat):
                 c_count += 1
                 continue
             else:
-                return False, "Fasta: Character not allowed [" + c + "] in sequence", c_count
+                return False, "Character not allowed [" + c + "] in sequence.", c_count
 
         return True, "", -1
 

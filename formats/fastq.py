@@ -21,27 +21,27 @@ class Fastq(AbsFormat):
 
             if line == "":
                 file.close()
-                return False, "Fastq: Empty line at line: " + str(count+1)
+                return False, "Empty line at line: " + str(count+1)
 
             line_kind = count % 4
             valid_line, msg = self.test_line(line, line_kind)
 
             if not valid_line:
                 file.close()
-                return False, "Fastq: " + msg + " Line: " + str(count+1)
+                return False, msg + " Line: " + str(count+1)
 
             if line_kind == 1:
                 len_of_sequence = len(line)
             elif line_kind == 3:
                 if len(line) != len_of_sequence:
                     file.close()
-                    return False, "Fastq: The quality sequence is not the same length as the DNA sequence. Line:" + str(count+1)
+                    return False, "The quality sequence is not the same length as the DNA sequence. Line:" + str(count+1)
 
             count += 1
 
         if count % 4 != 0:
             file.close()
-            return False, "Fastq: Last entry is missing information. Line:" + str(count+1)
+            return False, "Last entry is missing information. Line:" + str(count+1)
 
         file.close()
         return True, ""

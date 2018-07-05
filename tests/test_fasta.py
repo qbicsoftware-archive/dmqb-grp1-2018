@@ -52,7 +52,6 @@ class TestFasta(unittest.TestCase):
         """Tests the Fasta validator with valid files"""
 
         filename = "valid.fasta"
-        valid = True
         
         f = Fasta("DNA")
 
@@ -71,15 +70,15 @@ class TestFasta(unittest.TestCase):
         """Tests the Fasta validator with a corrupt file that has coding errors in the sequences"""
 
         filename = "wrongCoding.fasta"
-        valid = False
+        file_valid = False
 
         f = Fasta("DNA")
-        valid, msg = f.validate_file(get_path(valid, True, filename))
+        valid, msg = f.validate_file(get_path(file_valid, True, filename))
         self.assertFalse(valid)
         self.assertEqual(msg, "Character not allowed [O] in sequence. at line: 3:10")
 
         f = Fasta("AA")
-        valid, msg = f.validate_file(get_path(valid, False, filename))
+        valid, msg = f.validate_file(get_path(file_valid, False, filename))
         self.assertFalse(valid)
         self.assertEqual(msg, "Character not allowed [J] in sequence. at line: 3:10")
 
@@ -87,15 +86,15 @@ class TestFasta(unittest.TestCase):
         """Tests the Fasta validator with a corrupt file that contains an empty line"""
 
         filename = "emptyLine.fasta"
-        valid = False
+        file_valid = False
 
         f = Fasta("DNA")
-        valid, msg = f.validate_file(get_path(valid, True, filename))
+        valid, msg = f.validate_file(get_path(file_valid, True, filename))
         self.assertFalse(valid)
         self.assertEqual(msg, "Empty line at line: 3")
 
         f = Fasta("AA")
-        valid, msg = f.validate_file(get_path(valid, False, filename))
+        valid, msg = f.validate_file(get_path(file_valid, False, filename))
         self.assertFalse(valid)
         self.assertEqual(msg, "Empty line at line: 3")
 
@@ -103,15 +102,15 @@ class TestFasta(unittest.TestCase):
         """Tests the Fasta validator with a corrupt file that is missing the sequence to a header"""
 
         filename = "doubleHeader.fasta"
-        valid = False
+        file_valid = False
 
         f = Fasta("DNA")
-        valid, msg = f.validate_file(get_path(valid, True, filename))
+        valid, msg = f.validate_file(get_path(file_valid, True, filename))
         self.assertFalse(valid)
         self.assertEqual(msg, "Header without a sequence in line: 3")
 
         f = Fasta("AA")
-        valid, msg = f.validate_file(get_path(valid, False, filename))
+        valid, msg = f.validate_file(get_path(file_valid, False, filename))
         self.assertFalse(valid)
         self.assertEqual(msg, "Header without a sequence in line: 3")
 

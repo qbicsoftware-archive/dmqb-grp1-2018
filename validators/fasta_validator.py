@@ -22,10 +22,13 @@ class Fasta(AbsValidator):
 
     def validate_file(self, file_path):
         """Validates whether the file at the given path is of the fastq format or not.
+            (also see AbsValidator.)
 
-            :returns boolean whether the format is valid, string message why it is not or an empty string if valid.
+            :returns boolean whether the format is valid,
+                    string message why it is not or an empty string if valid.
         """
 
+        # sorry for the indent heaven.
         with open(file_path, "r") as file:
 
             had_header = False
@@ -66,7 +69,11 @@ class Fasta(AbsValidator):
             return True, ""
 
     def validate_line_coding(self, line):
-        """checks the given line for characters not allowed by the format either DNA or aminoacid coding"""
+        """checks the given line for characters not allowed by the format either DNA or aminoacid coding
+            returns first whether the line coding was correct
+                second a message containing the char that was wrong if there was one else an empty string
+                third the position at which the faulty char was found
+        """
         c_count = 1
         for c in line:
             if c in self.allowed:
@@ -88,7 +95,7 @@ class Fasta(AbsValidator):
 
     @staticmethod
     def get_dna():
-        """returns a list of all allowed characters coding for an base"""
+        """returns a list of all allowed characters coding for a dna base"""
         return ['A', 'C', 'G', 'T', 'N', 'U', 'K', 'S', 'Y', 'M', 'W', 'R', 'B', 'D', 'H', 'V', '-']
 
     """

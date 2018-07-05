@@ -7,8 +7,10 @@ class Fastq(AbsValidator):
 
     def validate_file(self, file_path):
         """Validates whether the file at the given path is of the fastq format or not.
+            (also see AbsValidator.)
 
-            :returns boolean whether the format is valid, string message why it is not valid or an empty string.
+            :returns boolean whether the format is valid
+                string message why it is not valid or an empty string.
         """
 
         with open(file_path, "r") as file:
@@ -78,7 +80,10 @@ class Fastq(AbsValidator):
 
     @staticmethod
     def get_quality_symbols():
-        """returns a list of all allowed quality symbols in asc order"""
+        """returns a list of all allowed quality symbols in asc order:
+            lowest--->highest
+            !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~]
+        """
 
         all_string = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~]"
         return list(all_string)

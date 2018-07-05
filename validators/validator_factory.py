@@ -32,5 +32,8 @@ def get_validator(name):
 
 
 def get_uncertain_endings():
-    """returns a list of all file endings that don't fully define their format."""
+    """returns a list of all file endings that don't fully define their format.
+        For formats that for example can contain different kinds of data
+        like .fasta with genetic and aminoacid sequences.
+    """
     return ["fasta"]

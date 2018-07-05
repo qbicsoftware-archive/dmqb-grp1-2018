@@ -26,50 +26,44 @@ class Fasta(AbsValidator):
             :returns boolean whether the format is valid, string message why it is not or an empty string if valid.
         """
 
-        file = open(file_path, "r")
+        with open(file_path, "r") as file:
 
-        had_header = False
-        count = 1
-        for line in file:
-            line = line.strip()
-            if line == "":
-                file.close()
-                return False, "Empty line at line: " + str(count)
+            had_header = False
+            count = 1
+            for line in file:
+                line = line.strip()
+                if line == "":
+                    return False, "Empty line at line: " + str(count)
 
-            if had_header:
-                if line.startswith(">"):
-                    file.close()
-                    return False, "Header without a sequence in line: " + str(count-1)
+                if had_header:
+                    if line.startswith(">"):
+                        return False, "Header without a sequence in line: " + str(count-1)
 
-                result, message, char_pos = self.validate_line_coding(line)
-
-                if result:
-                    had_header = False
-                    count += 1
-                else:
-                    file.close()
-                    return False, message+" At line: " + str(count) + ":" + str(char_pos)
-
-            else:
-                if line.startswith(">"):
-                    had_header = True
-                    count += 1
-                    continue
-                else:
                     result, message, char_pos = self.validate_line_coding(line)
 
                     if result:
+                        had_header = False
                         count += 1
                     else:
-                        file.close()
-                        return False, message + " at line: " + str(count) + ":" + str(char_pos)
+                        return False, message+" At line: " + str(count) + ":" + str(char_pos)
 
-        if had_header:
-            file.close()
-            return False, "Header at end of file with no sequence."
+                else:
+                    if line.startswith(">"):
+                        had_header = True
+                        count += 1
+                        continue
+                    else:
+                        result, message, char_pos = self.validate_line_coding(line)
 
-        file.close()
-        return True, ""
+                        if result:
+                            count += 1
+                        else:
+                            return False, message + " at line: " + str(count) + ":" + str(char_pos)
+
+            if had_header:
+                return False, "Header at end of file with no sequence."
+
+            return True, ""
 
     def validate_line_coding(self, line):
         """checks the given line for characters not allowed by the format either DNA or aminoacid coding"""

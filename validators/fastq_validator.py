@@ -11,39 +11,34 @@ class Fastq(AbsValidator):
             :returns boolean whether the format is valid, string message why it is not valid or an empty string.
         """
 
-        file = open(file_path, "r")
+        with open(file_path, "r") as file:
 
-        count = 0
-        len_of_sequence = -1
+            count = 0
+            len_of_sequence = -1
 
-        for line in file:
-            line = line.strip()
+            for line in file:
+                line = line.strip()
 
-            if line == "":
-                file.close()
-                return False, "Empty line at line: " + str(count+1)
+                if line == "":
+                    return False, "Empty line at line: " + str(count+1)
 
-            line_kind = count % 4
-            valid_line, msg = self.test_line(line, line_kind)
+                line_kind = count % 4
+                valid_line, msg = self.test_line(line, line_kind)
 
-            if not valid_line:
-                file.close()
-                return False, msg + " Line: " + str(count+1)
+                if not valid_line:
+                    return False, msg + " Line: " + str(count+1)
 
-            if line_kind == 1:
-                len_of_sequence = len(line)
-            elif line_kind == 3:
-                if len(line) != len_of_sequence:
-                    file.close()
-                    return False, "The quality sequence is not the same length as the DNA sequence. Line:" + str(count+1)
+                if line_kind == 1:
+                    len_of_sequence = len(line)
+                elif line_kind == 3:
+                    if len(line) != len_of_sequence:
+                        return False, "The quality sequence is not the same length as the DNA sequence. Line:" + str(count+1)
 
-            count += 1
+                count += 1
 
-        if count % 4 != 0:
-            file.close()
-            return False, "Last entry is missing information. Line:" + str(count+1)
+            if count % 4 != 0:
+                return False, "Last entry is missing information. Line:" + str(count+1)
 
-        file.close()
         return True, ""
 
     def test_line(self, line, kind):

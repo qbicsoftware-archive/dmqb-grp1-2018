@@ -14,12 +14,12 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 
 setup(
-    name='format-validator',
+    name='Valifor',
     version=version,
-    description='A small validator for validators in the NCBI context',
+    description='A small validator for formats in the NCBI context',
     long_description=readme,
-    keywords=['validator', 'validators', 'bioinformatics'],
-    author='Najia Ahmadi and Alexxander Ott',
+    keywords=['validator', 'formats', 'bioinformatics', 'fasta', 'fastq'],
+    author='Najia Ahmadi and Alexander Ott',
     license=license,
     scripts=['scripts/valifor'],  # entry point! name of the script also sets name of the command in the cmd-line.
     install_requires=required,

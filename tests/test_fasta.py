@@ -2,7 +2,7 @@
 
 import os
 import unittest
-from formats.fasta import Fasta
+from validators.fasta_validator import Fasta
 
 
 def complete_path(wdir, path):
@@ -46,7 +46,7 @@ def get_path(valid, dna, filename):
 
 
 class TestFasta(unittest.TestCase):
-    """Unittest class for automatic testing of the Fasta class in formats.fasta."""
+    """Unittest class for automatic testing of the Fasta class in validators.fasta."""
 
     def test_valid(self):
         """Tests the Fasta validator with valid files"""

@@ -1,6 +1,6 @@
 
-from formats.fasta import Fasta
-from formats.fastq import Fastq
+from validators.fasta_validator import Fasta
+from validators.fastq_validator import Fastq
 
 
 def available_formats():

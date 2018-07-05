@@ -1,5 +1,5 @@
 
-from formats.abstract_format import AbsFormat
+from validators.abstract_validator import AbsFormat
 
 
 class Fastq(AbsFormat):

@@ -16,9 +16,9 @@ with open('requirements.txt') as f:
 setup(
     name='format-validator',
     version=version,
-    description='A small validator for formats in the NCBI context',
+    description='A small validator for validators in the NCBI context',
     long_description=readme,
-    keywords=['validator', 'formats', 'bioinformatics'],
+    keywords=['validator', 'validators', 'bioinformatics'],
     author='Najia Ahmadi and Alexxander Ott',
     license=license,
     scripts=['scripts/valifor'],  # entry point! name of the script also sets name of the command in the cmd-line.

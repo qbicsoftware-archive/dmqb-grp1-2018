@@ -2,9 +2,9 @@
 
 import click
 import os.path
-import formats.format_factory as ff
+import validators.validator_factory as vf
 
-available_formats = ff.available_formats()
+available_formats = vf.available_formats()
 
 
 @click.command(context_settings={'help_option_names': ['-h', '--help']})
@@ -13,7 +13,7 @@ available_formats = ff.available_formats()
 @click.argument('paths', nargs=-1, type=click.Path())
 def valifor_cli(format, paths):
     """Welcome to the format validator Valifor:\n
-        Valifor is a easily extensible validator for different formats.
+        Valifor is a easily extensible validator for different validators.
         To get started you can call "valifor --help" to get this message again and more information to the options.
 
         To use valifor you can call:\n
@@ -39,7 +39,7 @@ def valifor_cli(format, paths):
     if format is None:
         click.echo("No format given. Will use file-ending if possible.")
         click.echo("For these file-endings the more constricting definition is chosen:")
-        click.echo(ff.get_uncertain_endings())
+        click.echo(vf.get_uncertain_endings())
 
         test_files_with_ending(files)
     else:
@@ -71,7 +71,7 @@ def gather_files(paths):
 def test_files(files, format):
     """validates all given files according to the given format and prints the results"""
 
-    validator = ff.get_validator(format)
+    validator = vf.get_validator(format)
 
     for file in files:
         valid, msg = validator.validate_file(file)
@@ -86,13 +86,13 @@ def test_files_with_ending(files):
 
         if "." in filename:
             ending = str.split(filename, ".")[-1]
-            format = ff.get_format_from_ending(ending)
+            format = vf.get_format_from_ending(ending)
 
             if format is "":
                 click.echo("Skipping: " + filename)
                 click.echo("Unknown file-ending: " + ending)
             else:
-                validator = ff.get_validator(format)
+                validator = vf.get_validator(format)
                 valid, msg = validator.validate_file(file)
 
                 print_result(valid, format, msg, file)

@@ -1,7 +1,7 @@
 
 import os
 import unittest
-from formats.fastq import Fastq
+from validators.fastq_validator import Fastq
 
 
 def complete_path(wdir, path):
@@ -28,7 +28,7 @@ PATH_CORRUPT_FILES = complete_path(working_dir, "test_files/corrupt/fastq")
 
 
 class TestFastq(unittest.TestCase):
-    """Unittest class for automatic testing of the Fastq class in formats.fastq."""
+    """Unittest class for automatic testing of the Fastq class in validators.fastq."""
 
     def test_valid(self):
         """Tests the Fastq validator with all valid files"""

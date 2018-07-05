@@ -11,7 +11,7 @@ install:
   - pip install .
   - pip install codecov pytest pytest-cov
 
-script: python -m pytest --cov=formats
+script: python -m pytest --cov=validators
 
 after_success:
 - codecov

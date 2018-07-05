@@ -1,17 +1,23 @@
 sudo: required
 language: python
 python:
-    - "2.7"
-    - "3.4"
-    - "3.5"
-    - "3.6"
-
+  - '2.7'
+  - '3.4'
+  - '3.5'
+  - '3.6'
 install:
   - cd ${TRAVIS_BUILD_DIR}
   - pip install .
   - pip install codecov pytest pytest-cov
-
 script: python -m pytest --cov=validators
 
 after_success:
 - codecov
+
+deploy:
+  provider: pypi
+  user: a.ott
+  password:
+    secure: d1iXNpm1NHP6u2oa/9/+I3m8DYsCF6e2M3oiALfRgclWsp4RBNec9OJwMHReHfFOLk6I48x1C1y3zbjKw9gVyHGPvOKYrpvdqabSZ+uojgUgzBwePu/xsrkoahOEfo6E+/wzx1u+93tWpsuCtNJziQeFCj01OPeRpBkwFDpvXr2bUSVQpK6yS+IY+NC3cP91VNf/57ukZfWKAxGzZ9QuhKjqa5amOSVA/6vUQUXtdReI56h/cktMMqJEsxQCRvhXHfDpTiKPEUNsqH9vbm4N4Bcbb4f8XsBBqVw57UaVf+2XeeL1xaxPe2i0R3a98YG2Jm8jQ3zjrD8heKfY9lTkInyb1fS5BiS+FjS+RYdLfO9yh8uDZWGkk3qHscysQTvi2mSmn7gRrQi81vqET2DHqW+IsHCo4e+cM0LfPvawSvGBJi+16od5OHmVzsW4a4N0+127DBY0hBacO8TIFKlHKwDP/70RAAAy0HXCjY0pCStAFzCKq8oP5bZHnQenVVr/V7bByCjeTMog5ZRLr1/6EzRXqHsmPNg50NQb6C6maiGVx0+zhSFQPjN928lVUzEGiObR7bfGgbqnOFva6WH08gscdUFs5+eCabUGLwHETGUIDoP7xgJB3sXRe1UN6oQi/yk0apa/FFcnFeaBr1kEexsrzmDE+s4eTOXUIIUc8FU=
+  on:
+    tags: true

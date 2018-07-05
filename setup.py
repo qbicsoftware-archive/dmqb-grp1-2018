@@ -20,6 +20,8 @@ setup(
     long_description=readme,
     keywords=['validator', 'formats', 'bioinformatics', 'fasta', 'fastq'],
     author='Najia Ahmadi and Alexander Ott',
+    author_email="a.ott@student.uni-tuebingen.de",
+    url="https://github.com/qbicsoftware/dmqb-grp1-2018",
     license=license,
     scripts=['scripts/valifor'],  # entry point! name of the script also sets name of the command in the cmd-line.
     install_requires=required,
